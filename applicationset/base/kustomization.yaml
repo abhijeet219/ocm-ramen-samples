@@ -1,0 +1,5 @@
+---
+resources:
+  - applicationset.yaml
+  - placement.yaml
+  - binding.yaml

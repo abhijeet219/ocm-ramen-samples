@@ -1,0 +1,36 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: APPSET_NAME
+  namespace: argocd
+spec:
+  generators:
+  - matrix:
+      generators:
+      - git:
+          repoURL: https://github.com/RamenDR/ocm-ramen-samples.git
+          revision: main
+          directories:
+          - path: WORKLOAD_PATH
+      - list:
+          elements:
+          - name: PLACEMENT_SELECTED_CLUSTER
+  template:
+    metadata:
+      name: 'UNIQUE_APP_NAME-{{name}}'
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/RamenDR/ocm-ramen-samples.git
+        targetRevision: main
+        path: '{{path}}'
+      destination:
+        name: '{{name}}'
+        namespace: TARGET_NAMESPACE
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
